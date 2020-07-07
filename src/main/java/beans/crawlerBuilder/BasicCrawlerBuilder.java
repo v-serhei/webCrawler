@@ -6,6 +6,7 @@ import beans.crawler.SimpleCrawler;
 import java.net.URL;
 
 public class BasicCrawlerBuilder implements CrawlerBuilder {
+
     private URL seed;
     private int visitedPagesLimit;
     private int depthLink;
