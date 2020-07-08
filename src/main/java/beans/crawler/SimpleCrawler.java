@@ -1,5 +1,8 @@
 package beans.crawler;
 
+import beans.link.Extractor;
+import beans.link.LinkManager;
+
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,11 +13,15 @@ public class SimpleCrawler implements Crawler {
     private int depthLink;
     private boolean parallelMode;
     private AtomicInteger parsedPagesCount;
+    private LinkManager linkManager;
+    private Extractor extractor;
+
     //private
 
     {
         status = false;
         parsedPagesCount = new AtomicInteger(0);
+        linkManager = LinkManager.GET;
     }
 
     public SimpleCrawler(URL seedUri, int pageLimit, int depthLink, boolean parallelMode) {
@@ -22,6 +29,7 @@ public class SimpleCrawler implements Crawler {
         this.pageLimit = pageLimit;
         this.depthLink = depthLink;
         this.parallelMode = parallelMode;
+
     }
 
     public void startCrawl() {
@@ -48,7 +56,8 @@ public class SimpleCrawler implements Crawler {
 
     @Override
     public void crawlPage(URL page) {
-
         System.out.println("CrawlPAge, stub");
+        linkManager.addLinks(extractor.extract(page));
+
     }
 }
