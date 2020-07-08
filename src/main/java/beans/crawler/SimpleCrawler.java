@@ -19,10 +19,15 @@ public class SimpleCrawler implements Crawler {
 
     public void startCrawl() {
         System.out.println("start crawling. stub");
+        crawlPage();
     }
 
     public void stopCrawl() {
         System.out.println("stop crawling. stub");
     }
 
+    @Override
+    public void crawlPage() {
+        System.out.println("CrawlPAge, stub");
+    }
 }
