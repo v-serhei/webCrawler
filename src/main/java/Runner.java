@@ -22,6 +22,8 @@ public class Runner {
 
 
         Crawler crawler =  cBuilder.buildSimpleCrawler();
+        crawler.stopCrawl();
+        crawler.startCrawl();
         crawler.startCrawl();
         crawler.stopCrawl();
 
