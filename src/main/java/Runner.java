@@ -25,7 +25,5 @@ public class Runner {
         crawler.startCrawl();
         crawler.stopCrawl();
 
-
-
     }
 }
