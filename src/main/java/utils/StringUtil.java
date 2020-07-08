@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.File;
-import java.net.URL;
 
 public class StringUtil {
     static {
@@ -17,15 +16,6 @@ public class StringUtil {
     private static final String ROOT_DOWNLOADS_FOLDER;
 
     private StringUtil () {
-    }
-
-    public static String getLinkValue(URL link) {
-        String value;
-
-        //TODO del this
-        value = "";
-
-        return value;
     }
 
     public static String getBaseDomain (String url) {
