@@ -1,31 +1,47 @@
 import beans.crawler.Crawler;
-import beans.crawler.CrawlerStrings;
-import beans.crawlerBuilder.BasicCrawlerBuilder;
+import beans.crawler.DefaultCrawlerSettings;
+import beans.crawler.SimpleCrawler;
+import beans.crawlerBuilder.SimpleCrawlerBuilder;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 public class Runner {
     public static void main(String[] args) {
-        BasicCrawlerBuilder cBuilder = new BasicCrawlerBuilder();
-        try {
-            cBuilder.setStartURL(new URL(CrawlerStrings.START_URL));
-        } catch (MalformedURLException e) {
-            //TODO del this
-            System.out.println("error to set start URL");
-            e.printStackTrace();
-        }
+        System.out.println("-------------------------------------start program");
 
+        SimpleCrawlerBuilder cBuilder = new SimpleCrawlerBuilder();
+
+        cBuilder.setStartURL(DefaultCrawlerSettings.START_URL);
         cBuilder.setDepthLink(8);
         cBuilder.setVisitedPagesLimit(10000);
         cBuilder.setParallelMode(false);
-
-
         Crawler crawler =  cBuilder.buildSimpleCrawler();
-        crawler.stopCrawl();
-        crawler.startCrawl();
-        crawler.startCrawl();
-        crawler.stopCrawl();
 
+        if(crawler != null) {
+            crawler.startCrawl();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                System.out.println("status = " + ((SimpleCrawler) crawler).getWorkStatus());
+                if (((SimpleCrawler) crawler).getWorkStatus()) {
+                    System.out.println("try to shutdown pools");
+                    if (((SimpleCrawler) crawler).getLinkManager().getLinkExtractorsPool().isShutdown()) {
+                        crawler.stopCrawl();
+                    } else {
+                        System.out.println("ждемсс");
+                        ((SimpleCrawler) crawler).getLinkManager().getLinkExtractorsPool().awaitTermination(5, TimeUnit.SECONDS);
+                        crawler.stopCrawl();
+                    }
+
+
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
+        System.out.println("-------------------------------------end program");
     }
 }

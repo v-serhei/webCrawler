@@ -1,49 +1,49 @@
 package beans.crawler;
 
-import beans.link.Extractor;
+import beans.link.Link;
 import beans.link.LinkManager;
-
-import java.net.URL;
-import java.util.concurrent.atomic.AtomicInteger;
+import beans.link.SimpleLinkManager;
+import utils.LinkParser;
 
 public class SimpleCrawler implements Crawler {
     private boolean status;
-    private URL seedUri;
+
+    private String seedUrl;
     private int pageLimit;
     private int depthLink;
     private boolean parallelMode;
-    private AtomicInteger parsedPagesCount;
     private LinkManager linkManager;
-    private Extractor extractor;
 
     //private
 
-    {
-        status = false;
-        parsedPagesCount = new AtomicInteger(0);
-        linkManager = LinkManager.GET;
-    }
-
-    public SimpleCrawler(URL seedUri, int pageLimit, int depthLink, boolean parallelMode) {
-        this.seedUri = seedUri;
+    public SimpleCrawler(String seedUri, int pageLimit, int depthLink, boolean parallelMode) {
+        this.seedUrl = seedUri;
         this.pageLimit = pageLimit;
         this.depthLink = depthLink;
         this.parallelMode = parallelMode;
-
+        linkManager = new SimpleLinkManager(pageLimit, depthLink, parallelMode);
     }
 
+    @Override
     public void startCrawl() {
         if (!status) {
             status = !status;
-            parsedPagesCount.set(0);
-            System.out.println("start crawling. stub");
-            crawlPage(seedUri);
+            // if page limit = 0 - there is no pages to crawl
+            if (pageLimit > 0) {
+                System.out.println("start crawling. stub");
+                linkManager.processLink(new Link(seedUrl, LinkParser.getBaseDomain(seedUrl), 0));
+
+             } else {
+                System.out.println("Page limit is 0, please set page limit before start crawler");
+                stopCrawl();
+            }
         } else {
             System.out.println("Already running");
         }
 
     }
 
+    @Override
     public void stopCrawl() {
         if (status) {
             status = !status;
@@ -51,13 +51,14 @@ public class SimpleCrawler implements Crawler {
         } else {
             System.out.println("Not started yet");
         }
+    }
+
+    public boolean getWorkStatus() {
+        return status;
 
     }
 
-    @Override
-    public void crawlPage(URL page) {
-        System.out.println("CrawlPAge, stub");
-        linkManager.addLinks(extractor.extract(page));
-
+    public LinkManager getLinkManager() {
+        return linkManager;
     }
 }
