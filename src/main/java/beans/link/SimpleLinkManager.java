@@ -2,9 +2,10 @@ package beans.link;
 
 
 import beans.crawler.DefaultCrawlerSettings;
-import utils.SimpleHtmlParser;
+import utils.SimpleHTMLParser;
 
-import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,7 +19,7 @@ public class SimpleLinkManager implements LinkManager {
     private AtomicInteger visitedPageCount;
 
     //TODO make thread safe
-    private LinkedList<Link> linksStorage = new LinkedList<>();
+    private CopyOnWriteArraySet<Link> linksStorage = new CopyOnWriteArraySet<>();
 
     public SimpleLinkManager(int pageLimit, int depthLink, boolean parallelMode) {
         this.pageLimit = pageLimit;
@@ -37,15 +38,17 @@ public class SimpleLinkManager implements LinkManager {
     }
 
     @Override
-    public void processLink(Link link) {
+    public void crawlLink(Link link) {
         //запускать потоки на выполнение поиска ссылок и граба страниц в файлы
-        //linkExctractorsPool.execute();
+        linkExtractorsPool.submit(new SimpleHTMLParser(this, link));
+
+        /*
         for (int i = 0; i < 2; i++) {
             linkExtractorsPool.execute(new SimpleHtmlParser("parser"+i));
            // pageParsersPool.execute(new SimpleHtmlParser("parser"+i));
         }
 
-        linkExtractorsPool.shutdown();
+        linkExtractorsPool.shutdown();*/
     }
 
     public ExecutorService getLinkExtractorsPool() {
@@ -56,7 +59,7 @@ public class SimpleLinkManager implements LinkManager {
         return pageParsersPool;
     }
 
-    /*
+
     public int addLinks(List<Link> linkList) {
         if (linkList.size() > 0) {
             linksStorage.addAll(linkList);
@@ -65,5 +68,4 @@ public class SimpleLinkManager implements LinkManager {
         return 0;
     }
 
-*/
 }

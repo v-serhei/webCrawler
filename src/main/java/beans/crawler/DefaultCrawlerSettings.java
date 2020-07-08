@@ -6,5 +6,5 @@ public interface DefaultCrawlerSettings {
     String START_URL = "https://en.wikipedia.org/wiki/Elon_Musk";
 
 
-    int DEFAULT_THREAD_COUNT = 3;
+    int DEFAULT_THREAD_COUNT = 4;
 }

@@ -7,6 +7,7 @@ public class SimpleLinkExtractor implements Extractor, Runnable {
 
     @Override
     public void run() {
+
         //проверять соответствует ли домен найденой линки домену линки, которую нам передали
         //если нет - установить предел для линки = 0
         //если да - установить предел как link.getCurrentDepth()+1;

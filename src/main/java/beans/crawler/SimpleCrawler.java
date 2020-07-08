@@ -3,7 +3,7 @@ package beans.crawler;
 import beans.link.Link;
 import beans.link.LinkManager;
 import beans.link.SimpleLinkManager;
-import utils.LinkParser;
+import utils.StringUtil;
 
 public class SimpleCrawler implements Crawler {
     private boolean status;
@@ -31,7 +31,7 @@ public class SimpleCrawler implements Crawler {
             // if page limit = 0 - there is no pages to crawl
             if (pageLimit > 0) {
                 System.out.println("start crawling. stub");
-                linkManager.processLink(new Link(seedUrl, LinkParser.getBaseDomain(seedUrl), 0));
+                linkManager.crawlLink(new Link(seedUrl, StringUtil.getBaseDomain(seedUrl), 0));
 
              } else {
                 System.out.println("Page limit is 0, please set page limit before start crawler");

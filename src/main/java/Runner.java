@@ -24,6 +24,7 @@ public class Runner {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            //todo переделать запуск (подождать пока стартанут потоки!)
             try {
                 System.out.println("status = " + ((SimpleCrawler) crawler).getWorkStatus());
                 if (((SimpleCrawler) crawler).getWorkStatus()) {
