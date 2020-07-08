@@ -3,7 +3,6 @@ package utils;
 import beans.link.Link;
 import beans.link.SimpleLinkManager;
 import beans.urlDownloader.SimpleURLDownloader;
-import beans.urlDownloader.URLDownloader;
 
 import java.io.File;
 
@@ -18,9 +17,7 @@ public class SimpleHTMLParser implements Runnable {
 
     @Override
     public void run() {
-        URLDownloader downloader = new SimpleURLDownloader();
-        parseHTMLFile(downloader.downloadHTML(link.getLinkValue()));
-
+        parseHTMLFile(new SimpleURLDownloader().downloadHTML(link));
     }
 
     private void parseHTMLFile(File downloadHTML) {

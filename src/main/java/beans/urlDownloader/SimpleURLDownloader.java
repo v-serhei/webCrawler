@@ -1,5 +1,6 @@
 package beans.urlDownloader;
 
+import beans.link.Link;
 import utils.StringUtil;
 
 import java.io.*;
@@ -10,14 +11,17 @@ public class SimpleURLDownloader implements URLDownloader {
     private URL url;
 
     @Override
-    public File downloadHTML(String urlAddress) {
+    public File downloadHTML(Link urlAddress) {
+        //Sleep thread for delay between downloads
+        delay(urlAddress);
+
         try {
-            url = new URL(urlAddress);
+            url = new URL(urlAddress.getLinkValue());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        File downloadFile = createFileForDownload(urlAddress);
+        File downloadFile = createFileForDownload(urlAddress.getLinkValue());
         if (downloadFile.exists()) {
             try (BufferedReader reader = new BufferedReader
                     (new InputStreamReader(url.openConnection().getInputStream()));
@@ -54,5 +58,16 @@ public class SimpleURLDownloader implements URLDownloader {
             }
         }
         return file;
+    }
+
+    private void delay(Link link) {
+        File folder = new File (link.getLinkValue());
+        if (folder.exists()) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

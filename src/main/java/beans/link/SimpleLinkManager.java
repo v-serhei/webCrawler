@@ -40,15 +40,7 @@ public class SimpleLinkManager implements LinkManager {
     @Override
     public void crawlLink(Link link) {
         //запускать потоки на выполнение поиска ссылок и граба страниц в файлы
-        linkExtractorsPool.submit(new SimpleHTMLParser(this, link));
-
-        /*
-        for (int i = 0; i < 2; i++) {
-            linkExtractorsPool.execute(new SimpleHtmlParser("parser"+i));
-           // pageParsersPool.execute(new SimpleHtmlParser("parser"+i));
-        }
-
-        linkExtractorsPool.shutdown();*/
+        linkExtractorsPool.execute(new SimpleHTMLParser(this, link));
     }
 
     public ExecutorService getLinkExtractorsPool() {

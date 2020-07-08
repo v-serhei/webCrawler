@@ -1,7 +1,8 @@
 package beans.urlDownloader;
 
+import beans.link.Link;
 import java.io.File;
 
 public interface URLDownloader {
-    File downloadHTML (String url);
+    File downloadHTML (Link url);
 }
