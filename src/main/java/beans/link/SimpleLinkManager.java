@@ -2,7 +2,6 @@ package beans.link;
 
 
 import beans.HTMLparser.SimpleHTMLParser;
-import beans.crawler.Crawler;
 import beans.crawler.DefaultCrawlerSettings;
 
 import java.util.List;
@@ -13,20 +12,15 @@ public class SimpleLinkManager implements LinkManager {
 
     private ExecutorService linkProcessorPool;
     private int pageLimit;
-    private int depthLink;
-    private Crawler crawler;
-    private boolean working;
-
+    private int depthLinkLimit;
     private AtomicInteger visitedPageCount;
     private BlockingQueue<Link> linkQueue;
     private CopyOnWriteArraySet<Link> visitedLinkStorage;
 
 
-    public SimpleLinkManager(Link startLink, int pageLimit, int depthLink, boolean parallelMode, Crawler crawler) {
+    public SimpleLinkManager(Link startLink, int pageLimit, int depthLinkLimit, boolean parallelMode) {
         this.pageLimit = pageLimit;
-        this.depthLink = depthLink;
-        //TODO del if not used
-        this.crawler = crawler;
+        this.depthLinkLimit = depthLinkLimit;
 
         int threadCount;
         if (parallelMode) {
@@ -34,35 +28,35 @@ public class SimpleLinkManager implements LinkManager {
         } else {
             threadCount = 1;
         }
+
         visitedPageCount = new AtomicInteger(0);
-
         linkProcessorPool = Executors.newFixedThreadPool(threadCount);
-
         linkQueue = new LinkedBlockingQueue<>(500);
-
         linkQueue.add(startLink);
-
         visitedLinkStorage = new CopyOnWriteArraySet<>();
-
-
     }
 
     @Override
     public void crawlLink() {
-        working = true;
         Link link = linkQueue.poll();
 
-        if (link != null) {
-            if (!visitedLinkStorage.contains(link)) {
-
-                linkProcessorPool.execute(new SimpleHTMLParser(this, link));
-
-                visitedLinkStorage.add(link);
-
-                visitedPageCount.getAndIncrement();
-
-            }
+        if (link == null) {
+            return;
         }
+
+        if (link.getCurrentDepth() == depthLinkLimit) {
+            return;
+        }
+
+        if (visitedLinkStorage.contains(link)) {
+            return;
+        }
+
+        linkProcessorPool.execute(new SimpleHTMLParser(this, link));
+        visitedLinkStorage.add(link);
+        visitedPageCount.getAndIncrement();
+        //recursion call
+        crawlLink();
     }
 
     @Override

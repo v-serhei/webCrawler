@@ -19,8 +19,6 @@ public class Runner {
             crawler.startCrawl();
             crawler.getStatistic();
         }
-
-
         System.out.println("-------------------------------------end program");
     }
 }

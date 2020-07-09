@@ -13,15 +13,14 @@ public class SimpleCrawler implements Crawler {
 
     //private
 
-    public SimpleCrawler(String seedUri, int pageLimit, int depthLink, boolean parallelMode) {
+    public SimpleCrawler(String seedUri, int pageLimit, int depthLinkLimit, boolean parallelMode) {
         this.pageLimit = pageLimit;
 
         linkManager = new SimpleLinkManager(
                 new Link(seedUri, StringUtil.getBaseDomain(seedUri), 0),
                 pageLimit,
-                depthLink,
-                parallelMode,
-                this
+                depthLinkLimit,
+                parallelMode
         );
     }
 
@@ -66,12 +65,4 @@ public class SimpleCrawler implements Crawler {
         System.out.println("Статистика");
     }
 
-    public boolean getWorkStatus() {
-        return status;
-
-    }
-
-    public LinkManager getLinkManager() {
-        return linkManager;
-    }
 }
