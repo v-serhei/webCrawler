@@ -1,6 +1,8 @@
 package utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StringUtil {
     static {
@@ -31,4 +33,7 @@ public class StringUtil {
         return ROOT_DOWNLOADS_FOLDER.concat(getBaseDomain(url));
     }
 
+    public static List<String> getLinkFromLine(String readLine) {
+        return new ArrayList<>();
+    }
 }

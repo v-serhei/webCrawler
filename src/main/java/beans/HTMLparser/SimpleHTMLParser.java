@@ -3,6 +3,7 @@ package beans.HTMLparser;
 import beans.link.Link;
 import beans.link.SimpleLinkManager;
 import beans.urlDownloader.SimpleURLDownloader;
+import utils.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,22 +29,33 @@ public class SimpleHTMLParser implements Extractor, Runnable {
     }
 
     @Override
-    public List<Link> extractLinks(File file, Link parentLinl) {
-        List <Link> links = new ArrayList<>(128);
+    public List<Link> extractLinks(File file, Link parentLink) {
+        List<Link> links = new ArrayList<>(128);
+        List<String> stringLinks = new ArrayList<>(128);
         //проверять соответствует ли домен найденой линки домену линки, которую нам передали
         //если нет - установить предел для линки = 0
         //если да - установить предел как link.getCurrentDepth()+1;
 
-
         try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
             while (bf.ready()) {
-
+                stringLinks.addAll(StringUtil.getLinkFromLine(bf.readLine()));
             }
-        }catch (IOException ex) {
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        if (!stringLinks.isEmpty()) {
+            for (String stringLink : stringLinks) {
+                String linkDomain = StringUtil.getBaseDomain(stringLink);
+                int linkDepth = 0;
+                if (parentLink.getBaseDomain().equals(linkDomain)) {
+                    linkDepth = parentLink.getCurrentDepth()+1;
+                }
 
+                links.add (new Link (stringLink, linkDomain, linkDepth));
+            }
         }
 
 
-        return null;
+        return links;
     }
 }

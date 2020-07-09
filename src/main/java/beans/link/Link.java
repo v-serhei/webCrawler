@@ -1,5 +1,7 @@
 package beans.link;
 
+import java.util.Objects;
+
 public class Link {
     private String linkValue;
     private String baseDomain;
@@ -23,4 +25,17 @@ public class Link {
         return currentDepth;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Link)) return false;
+        Link link = (Link) o;
+        return Objects.equals(linkValue, link.linkValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(linkValue);
+    }
 }
