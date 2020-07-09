@@ -39,6 +39,7 @@ public class SimpleLinkManager implements LinkManager {
         linkProcessorPool = Executors.newFixedThreadPool(threadCount);
 
         linkQueue = new LinkedBlockingQueue<>(500);
+
         linkQueue.add(startLink);
 
         visitedLinkStorage = new CopyOnWriteArraySet<>();
@@ -87,11 +88,13 @@ public class SimpleLinkManager implements LinkManager {
 
     @Override
     public void stopNow() {
-        linkProcessorPool.shutdownNow();
-        try {
-            linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (!linkProcessorPool.isShutdown()) {
+            linkProcessorPool.shutdownNow();
+            try {
+                linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

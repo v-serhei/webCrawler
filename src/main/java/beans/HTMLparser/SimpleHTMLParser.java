@@ -1,8 +1,10 @@
 package beans.HTMLparser;
 
 import beans.link.Link;
+import beans.link.LinkManager;
 import beans.link.SimpleLinkManager;
 import beans.urlDownloader.SimpleURLDownloader;
+import beans.urlDownloader.URLDownloader;
 import utils.StringUtil;
 
 import java.io.BufferedReader;
@@ -14,8 +16,8 @@ import java.util.List;
 
 public class SimpleHTMLParser implements LinkParser, Runnable {
     private Link link;
-    private SimpleLinkManager linkManager;
-    private SimpleURLDownloader htmlDownloader;
+    private LinkManager linkManager;
+    private URLDownloader htmlDownloader;
 
     public SimpleHTMLParser(SimpleLinkManager linkManager, Link link) {
         this.link = link;

@@ -7,8 +7,6 @@ import utils.StringUtil;
 
 public class SimpleCrawler implements Crawler {
     private boolean status;
-
-    private String seedURL;
     private int pageLimit;
     private LinkManager linkManager;
 
@@ -16,11 +14,10 @@ public class SimpleCrawler implements Crawler {
     //private
 
     public SimpleCrawler(String seedUri, int pageLimit, int depthLink, boolean parallelMode) {
-        this.seedURL = seedUri;
         this.pageLimit = pageLimit;
 
         linkManager = new SimpleLinkManager(
-                new Link(seedURL, StringUtil.getBaseDomain(seedURL), 0),
+                new Link(seedUri, StringUtil.getBaseDomain(seedUri), 0),
                 pageLimit,
                 depthLink,
                 parallelMode,
@@ -65,6 +62,7 @@ public class SimpleCrawler implements Crawler {
     @Override
     public void getStatistic() {
         //TODO доделать статистику
+        stopCrawl();
         System.out.println("Статистика");
     }
 
