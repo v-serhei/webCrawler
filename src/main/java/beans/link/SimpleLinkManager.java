@@ -2,7 +2,7 @@ package beans.link;
 
 
 import beans.crawler.DefaultCrawlerSettings;
-import utils.SimpleHTMLParser;
+import beans.HTMLparser.SimpleHTMLParser;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
