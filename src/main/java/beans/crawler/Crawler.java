@@ -4,4 +4,6 @@ public interface Crawler {
     void startCrawl();
 
     void stopCrawl();
+
+    void getStatistic();
 }

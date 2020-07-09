@@ -1,9 +1,15 @@
 package beans.link;
 
-import java.util.concurrent.ExecutorService;
+import java.util.List;
 
 public interface LinkManager {
-    void crawlLink(Link link);
-    ExecutorService getLinkExtractorsPool();
-    ExecutorService getPageParsersPool() ;
+    boolean continueWork();
+
+    int getVisitedPageCount();
+
+    void addLinksToQueue(List<Link> linkList);
+
+    void crawlLink();
+
+    void stopNow();
 }

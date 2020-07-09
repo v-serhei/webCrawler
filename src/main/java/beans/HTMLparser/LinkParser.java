@@ -5,6 +5,6 @@ import beans.link.Link;
 import java.io.File;
 import java.util.List;
 
-public interface Extractor {
-    List<Link> extractLinks(File file, Link parentLink);
+public interface LinkParser {
+    List<Link> parseLink(File file, Link parentLink);
 }

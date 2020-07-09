@@ -1,29 +1,32 @@
 package beans.link;
 
 
-import beans.crawler.DefaultCrawlerSettings;
 import beans.HTMLparser.SimpleHTMLParser;
+import beans.crawler.Crawler;
+import beans.crawler.DefaultCrawlerSettings;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimpleLinkManager implements LinkManager {
-    private ExecutorService linkExtractorsPool;
-    private ExecutorService pageParsersPool;
+
+    private ExecutorService linkProcessorPool;
     private int pageLimit;
     private int depthLink;
+    private Crawler crawler;
+    private boolean working;
 
     private AtomicInteger visitedPageCount;
+    private BlockingQueue<Link> linkQueue;
+    private CopyOnWriteArraySet<Link> visitedLinkStorage;
 
-    //TODO make thread safe
-    private CopyOnWriteArraySet<Link> linksStorage = new CopyOnWriteArraySet<>();
 
-    public SimpleLinkManager(int pageLimit, int depthLink, boolean parallelMode) {
+    public SimpleLinkManager(Link startLink, int pageLimit, int depthLink, boolean parallelMode, Crawler crawler) {
         this.pageLimit = pageLimit;
         this.depthLink = depthLink;
+        //TODO del if not used
+        this.crawler = crawler;
 
         int threadCount;
         if (parallelMode) {
@@ -32,32 +35,73 @@ public class SimpleLinkManager implements LinkManager {
             threadCount = 1;
         }
         visitedPageCount = new AtomicInteger(0);
-        linkExtractorsPool = Executors.newFixedThreadPool(threadCount);
-        pageParsersPool = Executors.newFixedThreadPool(threadCount);
+
+        linkProcessorPool = Executors.newFixedThreadPool(threadCount);
+
+        linkQueue = new LinkedBlockingQueue<>(500);
+        linkQueue.add(startLink);
+
+        visitedLinkStorage = new CopyOnWriteArraySet<>();
+
 
     }
 
     @Override
-    public void crawlLink(Link link) {
-        //запускать потоки на выполнение поиска ссылок и граба страниц в файлы
-        linkExtractorsPool.execute(new SimpleHTMLParser(this, link));
-    }
+    public void crawlLink() {
+        working = true;
+        Link link = linkQueue.poll();
 
-    public ExecutorService getLinkExtractorsPool() {
-        return linkExtractorsPool;
-    }
+        if (link != null) {
+            if (!visitedLinkStorage.contains(link)) {
 
-    public ExecutorService getPageParsersPool() {
-        return pageParsersPool;
-    }
+                linkProcessorPool.execute(new SimpleHTMLParser(this, link));
 
+                visitedLinkStorage.add(link);
 
-    public int addLinks(List<Link> linkList) {
-        if (linkList.size() > 0) {
-            linksStorage.addAll(linkList);
-            return linkList.size();
+                visitedPageCount.getAndIncrement();
+
+            }
         }
-        return 0;
+    }
+
+    @Override
+    public int getVisitedPageCount() {
+        return visitedPageCount.get();
+    }
+
+    @Override
+    public boolean continueWork() {
+        if (visitedPageCount.get() < pageLimit) {
+            crawlLink();
+            return true;
+        } else {
+            linkProcessorPool.shutdown();
+            try {
+                linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void stopNow() {
+        linkProcessorPool.shutdownNow();
+        try {
+            linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addLinksToQueue(List<Link> linkList) {
+        if (linkList == null) {
+            return;
+        }
+        if (linkList.size() > 0) {
+            linkQueue.addAll(linkList);
+        }
     }
 
 }

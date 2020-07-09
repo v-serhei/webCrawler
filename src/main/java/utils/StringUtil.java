@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StringUtil {
@@ -21,12 +20,9 @@ public class StringUtil {
     }
 
     public static String getBaseDomain (String url) {
-        String domain;
+        //TODO release this
 
-        //TODO del this
-        domain = "";
-
-        return domain;
+        return null;
     }
 
     public static String getFolderNameFromUrl (String url) {
@@ -34,6 +30,8 @@ public class StringUtil {
     }
 
     public static List<String> getLinkFromLine(String readLine) {
-        return new ArrayList<>();
+        //TODO release this
+
+        return null;
     }
 }

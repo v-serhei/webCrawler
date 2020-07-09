@@ -8,49 +8,64 @@ import utils.StringUtil;
 public class SimpleCrawler implements Crawler {
     private boolean status;
 
-    private String seedUrl;
+    private String seedURL;
     private int pageLimit;
-    private int depthLink;
-    private boolean parallelMode;
     private LinkManager linkManager;
+
 
     //private
 
     public SimpleCrawler(String seedUri, int pageLimit, int depthLink, boolean parallelMode) {
-        this.seedUrl = seedUri;
+        this.seedURL = seedUri;
         this.pageLimit = pageLimit;
-        this.depthLink = depthLink;
-        this.parallelMode = parallelMode;
-        linkManager = new SimpleLinkManager(pageLimit, depthLink, parallelMode);
+
+        linkManager = new SimpleLinkManager(
+                new Link(seedURL, StringUtil.getBaseDomain(seedURL), 0),
+                pageLimit,
+                depthLink,
+                parallelMode,
+                this
+        );
     }
 
     @Override
     public void startCrawl() {
         if (!status) {
-            status = !status;
+            status = true;
             // if page limit = 0 - there is no pages to crawl
             if (pageLimit > 0) {
-                System.out.println("start crawling. stub");
-                linkManager.crawlLink(new Link(seedUrl, StringUtil.getBaseDomain(seedUrl), 0));
-
-             } else {
+                System.out.println("start crawling");
+                linkManager.crawlLink();
+                while (linkManager.getVisitedPageCount() < pageLimit) {
+                    if (!linkManager.continueWork()) {
+                        status = false;
+                        break;
+                    }
+                }
+            } else {
                 System.out.println("Page limit is 0, please set page limit before start crawler");
-                stopCrawl();
+                status = false;
             }
         } else {
             System.out.println("Already running");
         }
-
     }
 
     @Override
     public void stopCrawl() {
         if (status) {
-            status = !status;
-            System.out.println("stop crawling. stub");
+            status = false;
+            linkManager.stopNow();
+            System.out.println("stop crawling");
         } else {
             System.out.println("Not started yet");
         }
+    }
+
+    @Override
+    public void getStatistic() {
+        //TODO доделать статистику
+        System.out.println("Статистика");
     }
 
     public boolean getWorkStatus() {

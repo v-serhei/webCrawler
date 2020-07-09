@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleHTMLParser implements Extractor, Runnable {
+public class SimpleHTMLParser implements LinkParser, Runnable {
     private Link link;
     private SimpleLinkManager linkManager;
     private SimpleURLDownloader htmlDownloader;
@@ -25,11 +25,11 @@ public class SimpleHTMLParser implements Extractor, Runnable {
 
     @Override
     public void run() {
-        extractLinks(htmlDownloader.downloadHTML(link), link);
+       linkManager.addLinksToQueue(parseLink(htmlDownloader.downloadHTML(link), link));
     }
 
     @Override
-    public List<Link> extractLinks(File file, Link parentLink) {
+    public List<Link> parseLink(File file, Link parentLink) {
         List<Link> links = new ArrayList<>(128);
         List<String> stringLinks = new ArrayList<>(128);
         //проверять соответствует ли домен найденой линки домену линки, которую нам передали
@@ -54,8 +54,6 @@ public class SimpleHTMLParser implements Extractor, Runnable {
                 links.add (new Link (stringLink, linkDomain, linkDepth));
             }
         }
-
-
         return links;
     }
 }
