@@ -13,13 +13,13 @@ public class SimpleURLDownloader implements URLDownloader {
     public File downloadHTML(Link urlAddress) {
         //Sleep thread for delay between downloads
         delay(urlAddress);
-        File downloadFile = createFileForDownload(urlAddress.getLinkValue());
+        File downloadFile = createFileForDownload(urlAddress);
         if (downloadFile.exists()) {
             try (BufferedReader reader = new BufferedReader
                     (new InputStreamReader(url.openConnection().getInputStream()));
                  BufferedWriter writer = new BufferedWriter
                          (new FileWriter(downloadFile))) {
-
+                writer.write(urlAddress.getLinkValue());
                 while (reader.ready()) {
                     writer.write(reader.readLine());
                 }
@@ -32,9 +32,10 @@ public class SimpleURLDownloader implements URLDownloader {
         return downloadFile;
     }
 
-    private File createFileForDownload(String urlAddress) {
+    private File createFileForDownload(Link urlAddress) {
         String folderPath = StringUtil.getFolderNameFromUrl(urlAddress);
-        String filePath = folderPath.concat(File.separator).concat(urlAddress);
+        String filePath = folderPath.concat(File.separator)
+                .concat(StringUtil.getUniqueFileName(urlAddress));
 
         File folder = new File(folderPath);
         if (!folder.exists()) {
@@ -55,7 +56,7 @@ public class SimpleURLDownloader implements URLDownloader {
 
     //если папка есть, значит закачки с сайта уже были и надо сделать небольшую паузу
     private void delay(Link link) {
-        File folder = new File(StringUtil.getFolderNameFromUrl(link.getLinkValue()));
+        File folder = new File(StringUtil.getFolderNameFromUrl(link));
         if (folder.exists()) {
             try {
                 Thread.sleep(500);

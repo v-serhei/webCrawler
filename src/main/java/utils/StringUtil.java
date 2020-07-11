@@ -5,6 +5,7 @@ import beans.link.Link;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,9 +19,14 @@ public class StringUtil {
                 .concat(File.separator)
                 .concat("downloads")
                 .concat(File.separator);
+
+        DOWNLOAD_FILE_EXTENSION = "_download.txt";
+        fileNumerator = new AtomicInteger(0);
     }
 
     private static final String ROOT_DOWNLOADS_FOLDER;
+    private static final String DOWNLOAD_FILE_EXTENSION;
+    private static AtomicInteger fileNumerator;
 
     private StringUtil() {
     }
@@ -35,8 +41,8 @@ public class StringUtil {
     }
 
 
-    public static String getFolderNameFromUrl(String url) {
-        return ROOT_DOWNLOADS_FOLDER.concat(getDomainFromURL(url));
+    public static String getFolderNameFromUrl(Link link) {
+        return ROOT_DOWNLOADS_FOLDER.concat(link.getBaseDomain());
     }
 
     public static List<Link> getLinksFromLine(String line, Link parentLink) {
@@ -89,5 +95,9 @@ public class StringUtil {
         return RegularExpressions.HTTP_BASE_PROTOCOL
                 .concat(RegularExpressions.HTTP_PROTOCOL_DELIMITER)
                 .concat(link);
+    }
+
+    public static String getUniqueFileName(Link link) {
+        return String.format("%05d_%s", fileNumerator.incrementAndGet(), DOWNLOAD_FILE_EXTENSION);
     }
 }
