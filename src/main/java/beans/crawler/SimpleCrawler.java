@@ -5,15 +5,17 @@ import beans.link.LinkManager;
 import beans.link.SimpleLinkManager;
 import utils.StringUtil;
 
+import java.util.List;
+
 public class SimpleCrawler implements Crawler {
     private boolean status;
     private boolean errorStatus;
     private int pageLimit;
     private LinkManager linkManager;
     private Thread lmThread;
+    private List<String> searchWords;
 
-
-    public SimpleCrawler(String seedUrl, int pageLimit, int depthLinkLimit, boolean parallelMode) {
+    public SimpleCrawler(String seedUrl, int pageLimit, int depthLinkLimit, boolean parallelMode, List <String> searchWords) {
         this.pageLimit = pageLimit;
 
         linkManager = new SimpleLinkManager(
@@ -23,8 +25,12 @@ public class SimpleCrawler implements Crawler {
                 parallelMode,
                 this
         );
+        this.searchWords = searchWords;
+
         errorStatus = false;
+
         lmThread = new Thread(linkManager);
+
     }
 
     @Override
@@ -75,9 +81,8 @@ public class SimpleCrawler implements Crawler {
     }
 
     @Override
-    public void getStatistic() {
-        //TODO доделать статистику
-        stopCrawl();
+    public void showStatistic() {
+
     }
 
     @Override

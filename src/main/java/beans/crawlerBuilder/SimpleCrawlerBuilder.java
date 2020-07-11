@@ -3,13 +3,20 @@ package beans.crawlerBuilder;
 import beans.crawler.Crawler;
 import beans.crawler.SimpleCrawler;
 
+import java.util.List;
+
 public class SimpleCrawlerBuilder implements CrawlerBuilder {
 
     private String seed;
     private int visitedPagesLimit;
     private int depthLink;
     private boolean parallelMode;
+    private List <String> searchWords;
 
+    @Override
+    public void setSearchWords(List<String> words) {
+       this.searchWords = words;
+    }
 
     public SimpleCrawlerBuilder() {
     }
@@ -18,7 +25,7 @@ public class SimpleCrawlerBuilder implements CrawlerBuilder {
         if (seed == null) {
             return null;
         }
-        return new SimpleCrawler(seed, visitedPagesLimit, depthLink, parallelMode);
+        return new SimpleCrawler(seed, visitedPagesLimit, depthLink, parallelMode, searchWords);
     }
 
     @Override

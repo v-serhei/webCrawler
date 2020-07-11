@@ -1,5 +1,7 @@
 package beans.crawlerBuilder;
 
+import java.util.List;
+
 public interface CrawlerBuilder {
     void setStartURL(String seed);
 
@@ -7,6 +9,8 @@ public interface CrawlerBuilder {
 
     void setDepthLink(int depth);
 
-    void setParallelMode (boolean mode);
+    void setParallelMode(boolean mode);
+
+    void setSearchWords(List<String> words);
 
 }

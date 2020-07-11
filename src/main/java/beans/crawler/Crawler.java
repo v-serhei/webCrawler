@@ -6,5 +6,5 @@ public interface Crawler {
     void stopCrawl();
     void stopCrawlWithCrash ();
     boolean getErrorStatus ();
-    void getStatistic();
+    void showStatistic();
 }
