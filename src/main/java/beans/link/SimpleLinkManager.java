@@ -2,6 +2,7 @@ package beans.link;
 
 
 import beans.HTMLparser.SimpleHTMLParser;
+import beans.crawler.Crawler;
 import beans.crawler.DefaultCrawlerSettings;
 
 import java.util.List;
@@ -10,15 +11,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimpleLinkManager implements LinkManager {
 
-    private ExecutorService linkProcessorPool;
+    private final Crawler crawler;
+    private boolean workStatus;
     private int pageLimit;
     private int depthLinkLimit;
     private AtomicInteger visitedPageCount;
     private BlockingQueue<Link> linkQueue;
     private CopyOnWriteArraySet<Link> visitedLinkStorage;
+    private ExecutorService linkProcessorPool;
+    private Link startLink;
 
 
-    public SimpleLinkManager(Link startLink, int pageLimit, int depthLinkLimit, boolean parallelMode) {
+    public SimpleLinkManager(Link startLink, int pageLimit, int depthLinkLimit, boolean parallelMode, Crawler crawler) {
         this.pageLimit = pageLimit;
         this.depthLinkLimit = depthLinkLimit;
 
@@ -28,82 +32,107 @@ public class SimpleLinkManager implements LinkManager {
         } else {
             threadCount = 1;
         }
+        this.startLink = startLink;
 
         visitedPageCount = new AtomicInteger(0);
         linkProcessorPool = Executors.newFixedThreadPool(threadCount);
-        linkQueue = new LinkedBlockingQueue<>(500);
+        linkQueue = new LinkedBlockingQueue<>();
         linkQueue.add(startLink);
         visitedLinkStorage = new CopyOnWriteArraySet<>();
+        this.crawler = crawler;
     }
+
 
     @Override
     public void crawlLink() {
+        workStatus = true;
         Link link = linkQueue.poll();
-
         if (link == null) {
             return;
         }
-
         if (link.getLinkDepth() == depthLinkLimit) {
             return;
         }
-
         if (visitedLinkStorage.contains(link)) {
             return;
         }
-
-
-        System.out.println("проверяем domain:" + link.getBaseDomain());
-        System.out.println("проверяем link:" + link.getLinkValue());
-
+        if (visitedLinkStorage.size() >= pageLimit) {
+            return;
+        }
         linkProcessorPool.execute(new SimpleHTMLParser(this, link));
+    }
+
+    @Override
+    public void addVisitedLinkToStorage(Link link) {
         visitedLinkStorage.add(link);
         visitedPageCount.getAndIncrement();
 
-        //recursion call
-        crawlLink();
     }
 
     @Override
-    public int getVisitedPageCount() {
+    public boolean getWorkStatus() {
+        return workStatus;
+    }
+
+    @Override
+    public int getPageLimit() {
+        return pageLimit;
+    }
+
+    @Override
+    public int getVisitedLinksCount() {
         return visitedPageCount.get();
     }
 
+    public CopyOnWriteArraySet<Link> getVisitedLinkStorage() {
+        return visitedLinkStorage;
+    }
+
     @Override
-    public boolean continueWork() {
-        if (visitedPageCount.get() < pageLimit) {
+    public void run() {
+        System.out.println("Page limit: " + pageLimit);
+        System.out.println("Seed link: " + startLink.getLinkValue());
+        while (visitedPageCount.get() < pageLimit) {
             crawlLink();
-            return true;
-        } else {
-            linkProcessorPool.shutdown();
-            try {
-                linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (!workStatus) {
+                stopNow();
+                return;
             }
         }
-        return false;
+        stopProcess();
+    }
+
+
+    private void stopProcess() {
+        linkProcessorPool.shutdownNow();
+        workStatus = false;
+
+        System.out.println("Visited pages count: " + visitedPageCount.get());
+        System.out.println("Stop crawl process");
+        synchronized (crawler) {
+            crawler.notifyAll();
+        }
     }
 
     @Override
     public void stopNow() {
-        if (!linkProcessorPool.isShutdown()) {
-            linkProcessorPool.shutdownNow();
-            try {
-                linkProcessorPool.awaitTermination(3, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        linkProcessorPool.shutdownNow();
+        crawler.stopCrawlWithCrash();
+        workStatus = false;
+        synchronized (crawler) {
+            crawler.notifyAll();
         }
     }
 
     public void addLinksToQueue(List<Link> linkList) {
-        if (linkList == null) {
+        if (linkList.isEmpty()) {
+            if (visitedPageCount.get() <= 1) {
+                stopNow();
+            }
             return;
         }
         if (linkList.size() > 0) {
             linkQueue.addAll(linkList);
         }
     }
-
 }

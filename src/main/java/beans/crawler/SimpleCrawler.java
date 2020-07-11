@@ -7,8 +7,10 @@ import utils.StringUtil;
 
 public class SimpleCrawler implements Crawler {
     private boolean status;
+    private boolean errorStatus;
     private int pageLimit;
     private LinkManager linkManager;
+    private Thread lmThread;
 
 
     public SimpleCrawler(String seedUrl, int pageLimit, int depthLinkLimit, boolean parallelMode) {
@@ -18,22 +20,35 @@ public class SimpleCrawler implements Crawler {
                 new Link("https://", StringUtil.getDomainFromURL(seedUrl), seedUrl, 0),
                 pageLimit,
                 depthLinkLimit,
-                parallelMode
+                parallelMode,
+                this
         );
+        errorStatus=false;
+        lmThread = new Thread(linkManager);
     }
 
     @Override
     public void startCrawl() {
+
         if (!status) {
             status = true;
             // if page limit = 0 - there is no pages to crawl
             if (pageLimit > 0) {
                 System.out.println("start crawling");
-                linkManager.crawlLink();
-                while (linkManager.getVisitedPageCount() < pageLimit) {
-                    if (!linkManager.continueWork()) {
-                        status = false;
-                        break;
+                lmThread.start();
+                while (true) {
+                    if (errorStatus) {
+                        return;
+                    }
+                    synchronized (this) {
+                        try {
+                            this.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (!linkManager.getWorkStatus()) {
+                        return;
                     }
                 }
             } else {
@@ -43,6 +58,11 @@ public class SimpleCrawler implements Crawler {
         } else {
             System.out.println("Already running");
         }
+        try {
+            lmThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -51,8 +71,6 @@ public class SimpleCrawler implements Crawler {
             status = false;
             linkManager.stopNow();
             System.out.println("stop crawling");
-        } else {
-            System.out.println("Not started yet");
         }
     }
 
@@ -63,4 +81,15 @@ public class SimpleCrawler implements Crawler {
         System.out.println("Статистика");
     }
 
+    @Override
+    public void stopCrawlWithCrash() {
+        status = false;
+        errorStatus = true;
+        System.out.println("Stop With error");
+    }
+
+    @Override
+    public boolean getErrorStatus() {
+        return errorStatus;
+    }
 }
