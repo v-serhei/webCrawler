@@ -5,12 +5,14 @@ import java.util.Objects;
 public class Link {
     private String linkValue;
     private String baseDomain;
-    private int currentDepth;
+    private String protocolValue;
+    private int linkDepth;
 
-    public Link(String linkValue, String baseDomain, int currentDepth) {
+    public Link(String protocolHTTP, String baseDomain, String linkValue, int currentDepth) {
         this.linkValue = linkValue;
         this.baseDomain = baseDomain;
-        this.currentDepth = currentDepth;
+        this.linkDepth = currentDepth;
+        this.protocolValue = protocolHTTP;
     }
 
     public String getLinkValue() {
@@ -21,10 +23,13 @@ public class Link {
         return baseDomain;
     }
 
-    public int getCurrentDepth() {
-        return currentDepth;
+    public int getLinkDepth() {
+        return linkDepth;
     }
 
+    public String getProtocolValue() {
+        return protocolValue;
+    }
 
     @Override
     public boolean equals(Object o) {

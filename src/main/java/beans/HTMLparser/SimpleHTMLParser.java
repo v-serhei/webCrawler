@@ -27,35 +27,22 @@ public class SimpleHTMLParser implements LinkParser, Runnable {
 
     @Override
     public void run() {
-       linkManager.addLinksToQueue(parseLink(htmlDownloader.downloadHTML(link), link));
+        linkManager.addLinksToQueue(parseLink(htmlDownloader.downloadHTML(link), link));
     }
 
     @Override
     public List<Link> parseLink(File file, Link parentLink) {
         List<Link> links = new ArrayList<>(128);
-        List<String> stringLinks = new ArrayList<>(128);
-        //проверять соответствует ли домен найденой линки домену линки, которую нам передали
-        //если нет - установить предел для линки = 0
-        //если да - установить предел как link.getCurrentDepth()+1;
-
-        try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
-            while (bf.ready()) {
-                stringLinks.addAll(StringUtil.getLinkFromLine(bf.readLine()));
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        if (!stringLinks.isEmpty()) {
-            for (String stringLink : stringLinks) {
-                String linkDomain = StringUtil.getBaseDomain(stringLink);
-                int linkDepth = 0;
-                if (parentLink.getBaseDomain().equals(linkDomain)) {
-                    linkDepth = parentLink.getCurrentDepth()+1;
+            if (file!=null) {
+                List<String> stringLinks = new ArrayList<>(128);
+                try (BufferedReader bf = new BufferedReader(new FileReader(file))) {
+                    while (bf.ready()) {
+                        links.addAll(StringUtil.getLinksFromLine(bf.readLine(), parentLink));
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-
-                links.add (new Link (stringLink, linkDomain, linkDepth));
             }
-        }
         return links;
     }
 }

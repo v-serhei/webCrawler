@@ -44,7 +44,7 @@ public class SimpleLinkManager implements LinkManager {
             return;
         }
 
-        if (link.getCurrentDepth() == depthLinkLimit) {
+        if (link.getLinkDepth() == depthLinkLimit) {
             return;
         }
 
@@ -55,6 +55,7 @@ public class SimpleLinkManager implements LinkManager {
         linkProcessorPool.execute(new SimpleHTMLParser(this, link));
         visitedLinkStorage.add(link);
         visitedPageCount.getAndIncrement();
+
         //recursion call
         crawlLink();
     }

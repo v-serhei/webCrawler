@@ -4,7 +4,6 @@ import beans.link.Link;
 import utils.StringUtil;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SimpleURLDownloader implements URLDownloader {
@@ -14,13 +13,6 @@ public class SimpleURLDownloader implements URLDownloader {
     public File downloadHTML(Link urlAddress) {
         //Sleep thread for delay between downloads
         delay(urlAddress);
-
-        try {
-            url = new URL(urlAddress.getLinkValue());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
         File downloadFile = createFileForDownload(urlAddress.getLinkValue());
         if (downloadFile.exists()) {
             try (BufferedReader reader = new BufferedReader
@@ -63,7 +55,7 @@ public class SimpleURLDownloader implements URLDownloader {
 
     //если папка есть, значит закачки с сайта уже были и надо сделать небольшую паузу
     private void delay(Link link) {
-        File folder = new File (link.getLinkValue());
+        File folder = new File(StringUtil.getFolderNameFromUrl(link.getLinkValue()));
         if (folder.exists()) {
             try {
                 Thread.sleep(500);

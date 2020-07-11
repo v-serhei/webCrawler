@@ -11,13 +11,11 @@ public class SimpleCrawler implements Crawler {
     private LinkManager linkManager;
 
 
-    //private
-
-    public SimpleCrawler(String seedUri, int pageLimit, int depthLinkLimit, boolean parallelMode) {
+    public SimpleCrawler(String seedUrl, int pageLimit, int depthLinkLimit, boolean parallelMode) {
         this.pageLimit = pageLimit;
 
         linkManager = new SimpleLinkManager(
-                new Link(seedUri, StringUtil.getBaseDomain(seedUri), 0),
+                new Link("https:\\\\", seedUrl, StringUtil.getDomainFromURL(seedUrl), 0),
                 pageLimit,
                 depthLinkLimit,
                 parallelMode
