@@ -7,8 +7,6 @@ public interface LinkManager extends Runnable{
 
     int getPageLimit ();
 
-    int getVisitedLinksCount ();
-
     void addLinksToQueue(List<Link> linkList);
 
     void addVisitedLinkToStorage(Link link);

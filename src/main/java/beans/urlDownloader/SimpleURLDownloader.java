@@ -66,10 +66,7 @@ public class SimpleURLDownloader implements URLDownloader {
         return file;
     }
 
-
-    //если папка есть, значит закачки с сайта уже были и надо сделать небольшую паузу
     private void delay(Link link) {
-
         File folder = new File(StringUtil.getFolderNameFromUrl(link));
         if (folder.exists()) {
             try {

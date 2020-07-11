@@ -86,11 +86,6 @@ public class SimpleLinkManager implements LinkManager {
         return pageLimit;
     }
 
-    @Override
-    public int getVisitedLinksCount() {
-        return visitedPageCount.get();
-    }
-
     public CopyOnWriteArraySet<Link> getVisitedLinkStorage() {
         return visitedLinkStorage;
     }
