@@ -1,6 +1,10 @@
 package beans.statistic;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public interface StatisticManager {
-    void getStatistic();
+    void showStatistic();
+    CopyOnWriteArrayList<StatisticResult> getFullStats();
+    void addStatisticResult (StatisticResult result);
 
 }

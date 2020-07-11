@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
-    private static final String ROOT_DOWNLOADS_FOLDER;
+    public static final String ROOT_DOWNLOADS_FOLDER;
     private static final String DOWNLOAD_FILE_EXTENSION;
     private static AtomicInteger fileNumerator;
 

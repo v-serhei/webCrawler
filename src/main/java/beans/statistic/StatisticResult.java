@@ -7,9 +7,36 @@ public class StatisticResult {
     private Map<String, Integer> statistic;
     private int totalHits;
 
+    public StatisticResult() {
+    }
+
     public StatisticResult(String link, Map<String, Integer> statistic, int totalHits) {
         this.link = link;
         this.statistic = statistic;
+        this.totalHits = totalHits;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public Map<String, Integer> getStatisticMap() {
+        return statistic;
+    }
+
+    public void setStatisticMap(Map<String, Integer> statistic) {
+        this.statistic = statistic;
+    }
+
+    public int getTotalHits() {
+        return totalHits;
+    }
+
+    public void setTotalHits(int totalHits) {
         this.totalHits = totalHits;
     }
 
