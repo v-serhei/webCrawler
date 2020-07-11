@@ -23,7 +23,7 @@ public class SimpleCrawler implements Crawler {
                 parallelMode,
                 this
         );
-        errorStatus=false;
+        errorStatus = false;
         lmThread = new Thread(linkManager);
     }
 
@@ -34,11 +34,10 @@ public class SimpleCrawler implements Crawler {
             status = true;
             // if page limit = 0 - there is no pages to crawl
             if (pageLimit > 0) {
-                System.out.println("start crawling");
                 lmThread.start();
                 while (true) {
                     if (errorStatus) {
-                        return;
+                        break;
                     }
                     synchronized (this) {
                         try {
@@ -48,7 +47,7 @@ public class SimpleCrawler implements Crawler {
                         }
                     }
                     if (!linkManager.getWorkStatus()) {
-                        return;
+                        break;
                     }
                 }
             } else {
@@ -59,6 +58,7 @@ public class SimpleCrawler implements Crawler {
             System.out.println("Already running");
         }
         try {
+            Thread.sleep(3000);
             lmThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class SimpleCrawler implements Crawler {
         if (status) {
             status = false;
             linkManager.stopNow();
-            System.out.println("stop crawling");
+            System.out.println("Stop crawling");
         }
     }
 
@@ -78,14 +78,13 @@ public class SimpleCrawler implements Crawler {
     public void getStatistic() {
         //TODO доделать статистику
         stopCrawl();
-        System.out.println("Статистика");
     }
 
     @Override
     public void stopCrawlWithCrash() {
         status = false;
         errorStatus = true;
-        System.out.println("Stop With error");
+        System.out.println("Stop crawler with error");
     }
 
     @Override

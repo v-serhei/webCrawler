@@ -40,6 +40,13 @@ public class SimpleLinkManager implements LinkManager {
         linkQueue.add(startLink);
         visitedLinkStorage = new CopyOnWriteArraySet<>();
         this.crawler = crawler;
+
+        System.out.printf("\nSeed link: %s\nPages limit: %d\nDepth limit: %d\nMultithreading mode: %s, threadCount: %d\n\n",
+                startLink.getLinkValue(),
+                pageLimit,
+                depthLinkLimit,
+                (parallelMode ? "ON":"OFF"),
+                threadCount);
     }
 
 
@@ -90,8 +97,8 @@ public class SimpleLinkManager implements LinkManager {
 
     @Override
     public void run() {
-        System.out.println("Page limit: " + pageLimit);
-        System.out.println("Seed link: " + startLink.getLinkValue());
+        System.out.println("Start crawl process");
+
         while (visitedPageCount.get() < pageLimit) {
             crawlLink();
             if (!workStatus) {
@@ -106,7 +113,6 @@ public class SimpleLinkManager implements LinkManager {
     private void stopProcess() {
         linkProcessorPool.shutdownNow();
         workStatus = false;
-
         System.out.println("Visited pages count: " + visitedPageCount.get());
         System.out.println("Stop crawl process");
         synchronized (crawler) {

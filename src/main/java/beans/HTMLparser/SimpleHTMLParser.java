@@ -35,7 +35,7 @@ public class SimpleHTMLParser extends Thread implements LinkParser {
             List<Link> linkList = parseLink(htmlDownloader.downloadHTML(link), link);
             if (!linkList.isEmpty()) {
                 linkManager.addVisitedLinkToStorage(link);
-                System.out.println("Downloaded page: " + link.getLinkValue());
+                //System.out.println("Downloaded page: " + link.getLinkValue());
                 linkManager.addLinksToQueue(linkList);
             }
         }
@@ -45,7 +45,6 @@ public class SimpleHTMLParser extends Thread implements LinkParser {
     public List<Link> parseLink(File file, Link parentLink) {
         List<Link> links = new ArrayList<>(128);
         if (file != null) {
-            List<String> stringLinks = new ArrayList<>(128);
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String in;
                 while ((in = reader.readLine()) != null) {

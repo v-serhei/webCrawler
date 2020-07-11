@@ -12,21 +12,19 @@ public class Runner {
        /*
         cBuilder.setDepthLink(8);
         cBuilder.setVisitedPagesLimit(10000);
-        cBuilder.setParallelMode(true); //defaul 8 threads, thread count can be changed in DefaultCrawlerSettings interface
+        cBuilder.setParallelMode(true); //default 4 threads, thread count can be changed in DefaultCrawlerSettings interface
         */
         cBuilder.setDepthLink(2);
         cBuilder.setVisitedPagesLimit(10);
-        cBuilder.setParallelMode(false);
+        cBuilder.setParallelMode(true);
 
         Crawler crawler =  cBuilder.buildSimpleCrawler();
 
         if(crawler != null) {
-            System.out.println("Start crawling\n\n");
             crawler.startCrawl();
             if (crawler.getErrorStatus()) {
                 System.out.println("Crawler has been crashed");
             }
-            //crawler.getStatistic();
         }
         System.out.println("\n\nEnd program");
     }
