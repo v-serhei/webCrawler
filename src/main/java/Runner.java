@@ -9,15 +9,21 @@ public class Runner {
         SimpleCrawlerBuilder cBuilder = new SimpleCrawlerBuilder();
 
         cBuilder.setStartURL(DefaultCrawlerSettings.START_URL);
+       /*
         cBuilder.setDepthLink(8);
         cBuilder.setVisitedPagesLimit(10000);
         cBuilder.setParallelMode(false);
+        */
+        cBuilder.setDepthLink(2);
+        cBuilder.setVisitedPagesLimit(10);
+        cBuilder.setParallelMode(true);
+
         Crawler crawler =  cBuilder.buildSimpleCrawler();
 
         if(crawler != null) {
             System.out.println("-------------------------------------start crawling");
             crawler.startCrawl();
-            crawler.getStatistic();
+            //crawler.getStatistic();
         }
         System.out.println("-------------------------------------end program");
     }

@@ -15,7 +15,7 @@ public class SimpleCrawler implements Crawler {
         this.pageLimit = pageLimit;
 
         linkManager = new SimpleLinkManager(
-                new Link("https:\\\\", seedUrl, StringUtil.getDomainFromURL(seedUrl), 0),
+                new Link("https://", StringUtil.getDomainFromURL(seedUrl), seedUrl, 0),
                 pageLimit,
                 depthLinkLimit,
                 parallelMode

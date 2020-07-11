@@ -35,7 +35,7 @@ public class SimpleURLDownloader implements URLDownloader {
     private File createFileForDownload(Link urlAddress) {
         String folderPath = StringUtil.getFolderNameFromUrl(urlAddress);
         String filePath = folderPath.concat(File.separator)
-                .concat(StringUtil.getUniqueFileName(urlAddress));
+                .concat(StringUtil.getUniqueFileName());
 
         File folder = new File(folderPath);
         if (!folder.exists()) {

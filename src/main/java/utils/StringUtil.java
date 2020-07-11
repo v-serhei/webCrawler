@@ -10,6 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil {
+
+    private static final String ROOT_DOWNLOADS_FOLDER;
+    private static final String DOWNLOAD_FILE_EXTENSION;
+    private static AtomicInteger fileNumerator;
+
     static {
         ROOT_DOWNLOADS_FOLDER = "src"
                 .concat(File.separator)
@@ -24,10 +29,6 @@ public class StringUtil {
         fileNumerator = new AtomicInteger(0);
     }
 
-    private static final String ROOT_DOWNLOADS_FOLDER;
-    private static final String DOWNLOAD_FILE_EXTENSION;
-    private static AtomicInteger fileNumerator;
-
     private StringUtil() {
     }
 
@@ -39,7 +40,6 @@ public class StringUtil {
         }
         return null;
     }
-
 
     public static String getFolderNameFromUrl(Link link) {
         return ROOT_DOWNLOADS_FOLDER.concat(link.getBaseDomain());
@@ -97,7 +97,7 @@ public class StringUtil {
                 .concat(link);
     }
 
-    public static String getUniqueFileName(Link link) {
+    public static String getUniqueFileName() {
         return String.format("%05d_%s", fileNumerator.incrementAndGet(), DOWNLOAD_FILE_EXTENSION);
     }
 }

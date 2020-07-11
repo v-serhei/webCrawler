@@ -52,6 +52,10 @@ public class SimpleLinkManager implements LinkManager {
             return;
         }
 
+
+        System.out.println("проверяем domain:" + link.getBaseDomain());
+        System.out.println("проверяем link:" + link.getLinkValue());
+
         linkProcessorPool.execute(new SimpleHTMLParser(this, link));
         visitedLinkStorage.add(link);
         visitedPageCount.getAndIncrement();
