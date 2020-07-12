@@ -3,6 +3,9 @@ package beans.crawler;
 import beans.link.Link;
 import beans.link.LinkManager;
 import beans.link.SimpleLinkManager;
+import beans.statistic.SimpleStatisticManager;
+import beans.statistic.StatisticManager;
+import utils.Helper;
 import utils.StringUtil;
 
 import java.util.List;
@@ -12,6 +15,7 @@ public class SimpleCrawler implements Crawler {
     private boolean errorStatus;
     private int pageLimit;
     private LinkManager linkManager;
+    private StatisticManager statisticManager;
     private Thread lmThread;
     private List<String> searchWords;
 
@@ -30,6 +34,7 @@ public class SimpleCrawler implements Crawler {
         errorStatus = false;
 
         lmThread = new Thread(linkManager);
+        statisticManager = new SimpleStatisticManager(searchWords);
 
     }
 
@@ -82,7 +87,13 @@ public class SimpleCrawler implements Crawler {
 
     @Override
     public void showStatistic() {
+        statisticManager.collectStatistic();
+        statisticManager.printTopTenResults();
+    }
 
+    @Override
+    public void saveStatistic(String fileName) {
+        statisticManager.saveStatisticToCSV(fileName);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Runner {
         searchWords.add("Tesla");
         searchWords.add("Musk");
         searchWords.add("Gigafactory");
-        searchWords.add("Elon Mask");
+        searchWords.add("Elon Musk");
 
         cBuilder.setStartURL(DefaultCrawlerSettings.START_URL);
        /*
@@ -31,12 +31,14 @@ public class Runner {
         Crawler crawler =  cBuilder.buildSimpleCrawler();
 
         if(crawler != null) {
-            crawler.startCrawl();
+            //crawler.startCrawl();
             if (crawler.getErrorStatus()) {
                 System.out.println("Crawler has been crashed");
             }
+            crawler.showStatistic();
+            crawler.saveStatistic("Test1.CSV");
         }
-        crawler.showStatistic();
+
         System.out.println("\n\nEnd program");
     }
 }

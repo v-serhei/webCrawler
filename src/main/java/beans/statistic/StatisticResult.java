@@ -1,5 +1,6 @@
 package beans.statistic;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class StatisticResult {
@@ -8,6 +9,7 @@ public class StatisticResult {
     private int totalHits;
 
     public StatisticResult() {
+        statistic = new HashMap<>();
     }
 
     public StatisticResult(String link, Map<String, Integer> statistic, int totalHits) {
@@ -48,7 +50,7 @@ public class StatisticResult {
         for (Map.Entry<String, Integer> entry : statistic.entrySet()) {
             sb
                     .append(entry.getKey())
-                    .append(" : ")
+                    .append(": ")
                     .append(entry.getValue())
                     .append("\n");
         }

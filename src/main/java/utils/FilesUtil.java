@@ -8,7 +8,7 @@ public class FilesUtil {
 
     public static List<String> getDownloadedFilesList () {
         List <String> list = new ArrayList<>(1024);
-        File rf = new File (StringUtil.ROOT_DOWNLOADS_FOLDER);
+        File rf = new File (StringUtil.DOWNLOADS_FOLDER);
         File [] folders = rf.listFiles();
         for (File folder : folders) {
             File [] files = folder.listFiles();
@@ -18,6 +18,5 @@ public class FilesUtil {
         }
         return list;
     }
-
 
 }

@@ -11,18 +11,26 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
-    public static final String ROOT_DOWNLOADS_FOLDER;
+    public static final String ROOT_RESOURCES_FOLDER;
+    public static final String DOWNLOADS_FOLDER;
+    public static final String STATISTIC_FOLDER;
     private static final String DOWNLOAD_FILE_EXTENSION;
     private static AtomicInteger fileNumerator;
 
     static {
-        ROOT_DOWNLOADS_FOLDER = "src"
+        ROOT_RESOURCES_FOLDER = "src"
                 .concat(File.separator)
                 .concat("main")
                 .concat(File.separator)
-                .concat("resources")
+                .concat("resources");
+
+        DOWNLOADS_FOLDER = ROOT_RESOURCES_FOLDER
                 .concat(File.separator)
                 .concat("downloads")
+                .concat(File.separator);
+        STATISTIC_FOLDER = ROOT_RESOURCES_FOLDER
+                .concat(File.separator)
+                .concat("statsresult")
                 .concat(File.separator);
 
         DOWNLOAD_FILE_EXTENSION = "_download.txt";
@@ -42,7 +50,7 @@ public class StringUtil {
     }
 
     public static String getFolderNameFromUrl(Link link) {
-        return ROOT_DOWNLOADS_FOLDER.concat(link.getBaseDomain());
+        return DOWNLOADS_FOLDER.concat(link.getBaseDomain());
     }
 
     public static List<Link> getLinksFromLine(String line, Link parentLink) {
@@ -99,5 +107,28 @@ public class StringUtil {
 
     public static String getUniqueFileName() {
         return String.format("%05d_%s", fileNumerator.incrementAndGet(), DOWNLOAD_FILE_EXTENSION);
+    }
+
+    public static Integer getWordCountFromLine(String line, String word) {
+        String sLine = removeTagsFromLine(line);
+        Integer count = 0;
+        Pattern p = Pattern.compile("(?i)(" + word + ")");
+        Matcher matcher = p.matcher(sLine);
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
+    }
+
+    private static String removeTagsFromLine(String line) {
+        return line
+                .replaceAll(RegularExpressions.PATTERN_TITLE_TAG, "")
+                .replaceAll(RegularExpressions.PATTERN_SCRIPT_TAG, "")
+                .replaceAll(RegularExpressions.PATTERN_SCRIPT_TAG2, "")
+                .replaceAll(RegularExpressions.PATTERN_TAG, "");
+    }
+
+    public static String getFolderNameForStatistic() {
+        return null;
     }
 }
