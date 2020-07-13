@@ -9,6 +9,35 @@ import utils.StringUtil;
 
 import java.util.List;
 
+
+/**
+ *
+ * This class is a simple implementation of the {@link Crawler} interface.
+ * Implements all basic methods of {@link Crawler} interface for present an
+ * example of the simple crawling process.
+ *
+ *  To crawl pages, the class object must be provided with an implementation:
+ *  {@link LinkManager} - controls the process of scanning web pages:
+ *  connecting, downloading, saving the result of scanning
+ *
+ *  {@link StatisticManager} - controls the process of collecting
+ *  statistics from downloaded pages
+ *
+ *  To create a class object, use constructor or create this
+ *  using class builder {@link beans.crawlerBuilder.CrawlerBuilder}
+ *
+ * @author Verbitsky Sergey
+ * @version 1.0
+ * @see LinkManager
+ * @see StatisticManager
+ * @see beans.crawlerBuilder.CrawlerBuilder
+ * @see DefaultCrawlerSettings
+ *
+ *
+ * */
+
+
+
 public class SimpleCrawler implements Crawler {
     private boolean status;
     private boolean errorStatus;
@@ -18,6 +47,33 @@ public class SimpleCrawler implements Crawler {
     private Thread lmThread;
     private List<String> searchWords;
 
+
+    /**
+     * Construct a simple crawler object
+     *
+     * @param depthLinkLimit  - sets the depth of visited pages.
+     *                        Link depth is the number of clicks
+     *                        required to reach a given page from the home page
+     *
+     * @param pageLimit - sets the count of scanning pages
+     * @param parallelMode - sets the use of multithreading when scanning pages.
+     *                     Value "true" - multithreading is enable
+     *                     (uses the number of threads specified in {@link DefaultCrawlerSettings}
+     *                     Value "false" - using one thread.
+     *
+     *                     Note:
+     *                     When using multithreaded mode, the scan threads may take
+     *                     some time to shut down
+     *
+     *                     This param does not affect the use of multithreading
+     *                     by statistics manager. Statistic manager use
+     *
+     *                     {@link LinkManager} always starts in a separate thread.
+     *
+     * @param searchWords - contains a list if searching words
+     * @param seedUrl - sets the start page for scanning
+     *
+     * */
     public SimpleCrawler(String seedUrl, int pageLimit, int depthLinkLimit, boolean parallelMode, List <String> searchWords) {
         this.pageLimit = pageLimit;
 
@@ -37,6 +93,10 @@ public class SimpleCrawler implements Crawler {
 
     }
 
+    /**
+     * Start scanning process and awaits the result of the {@link LinkManager}'s completion
+     *
+     */
     @Override
     public void startCrawl() {
 
@@ -77,6 +137,14 @@ public class SimpleCrawler implements Crawler {
 
     }
 
+    /**
+     * Forcibly stops the process without awaits
+     * the result of the {@link LinkManager}'s completion.
+     *
+     * Sends a forced stop command to the {@link LinkManager}
+     *
+     *
+     */
     @Override
     public void stopCrawl() {
         if (status) {
@@ -86,6 +154,9 @@ public class SimpleCrawler implements Crawler {
         }
     }
 
+    /**
+     * Display statistic of scanning
+     * */
     @Override
     public void showStatistic() {
         if (!linkManager.getWorkStatus()) {
@@ -95,11 +166,19 @@ public class SimpleCrawler implements Crawler {
         statisticManager.printTopTenResults();
     }
 
+    /**
+     * Save statistic to specific file
+     * @param fileName - contains file name for the statistic file
+     * */
     @Override
     public void saveStatistic(String fileName) {
         statisticManager.saveStatisticToCSV(fileName);
     }
 
+    /**
+     * Method called by LinkManager when crawling process failed
+     *
+     * */
     @Override
     public void stopCrawlWithCrash() {
         status = false;
@@ -107,6 +186,11 @@ public class SimpleCrawler implements Crawler {
         System.out.println("Stop crawler with error");
     }
 
+    /**
+     * Method called by Runner to get crawling process status
+     * @return boolean value "True" if process was crashed
+     *
+     * */
     @Override
     public boolean getErrorStatus() {
         return errorStatus;

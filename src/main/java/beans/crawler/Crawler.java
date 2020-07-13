@@ -1,9 +1,12 @@
 package beans.crawler;
 
 /**
- * @author Verbitsky Segey
- * Base interfece of Web Crawler
+ *
+ * Base interface of Web Crawler
  * Provides methods for control web crawling process
+ *
+ *
+ * @author Verbitsky Segey
  * @version 1.0
  */
 
