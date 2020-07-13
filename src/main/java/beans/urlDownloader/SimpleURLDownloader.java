@@ -13,7 +13,7 @@ public class SimpleURLDownloader implements URLDownloader {
 
     @Override
     public File downloadHTML(Link link) {
-        System.out.println("Обрабатываем " + link.getLinkValue());
+        System.out.println("Process: " + link.getLinkValue());
         //Sleep thread for delay between downloads
         delay(link);
         int status;
@@ -24,12 +24,10 @@ public class SimpleURLDownloader implements URLDownloader {
             connection.setConnectTimeout(1000);
             connection.setReadTimeout(1000);
             connection.setRequestProperty("Accept", "text/html, text/*");
-            connection.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 
             status = connection.getResponseCode();
         } catch (IOException e) {
-            System.out.println("не получилось скачать страницу: "+ link.getLinkValue());
-           // e.printStackTrace();
+            System.out.println("Processed filed: "+ link.getLinkValue());
             return null;
         }
 
@@ -54,8 +52,7 @@ public class SimpleURLDownloader implements URLDownloader {
                     }
 
                 } catch (IOException e) {
-                    System.out.println("не получилось скачать страницу: "+ link.getLinkValue());
-                   // e.printStackTrace();
+                    System.out.println("Processed filed: "+ link.getLinkValue());
                     return null;
                 }
             } else {
@@ -92,7 +89,7 @@ public class SimpleURLDownloader implements URLDownloader {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                //e.printStackTrace();
+                //
             }
         }
     }

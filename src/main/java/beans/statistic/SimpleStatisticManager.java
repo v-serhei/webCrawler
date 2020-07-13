@@ -52,22 +52,21 @@ public class SimpleStatisticManager implements StatisticManager {
                 String fileName = filesQueue.poll();
 
                 if (processedFiles.contains(fileName)) {
-                    System.out.println("файл уже обрабатывался "+fileName);
+                    System.out.println("File already processed "+fileName);
                     continue;
                 }
                 fileParserPool.execute(new SimpleStatisticCollector(fileName, searchWords, this));
             }
             while (true) {
                 if (filesRemaining.get() > 0) {
-                    System.out.println("Осталось обработать файлов: " + filesRemaining.get());
+                    System.out.println("Files remaining: " + filesRemaining.get());
                     Helper.sleepCurrentThread(1000);
                 } else {
                     break;
                 }
             }
-            Helper.sleepCurrentThread(3000);
+            Helper.sleepCurrentThread(10000);
             fileParserPool.shutdown();
-            Helper.sleepCurrentThread(3000);
             collect = false;
 
         } else {
