@@ -36,7 +36,7 @@ public class Runner {
         Crawler crawler =  cBuilder.buildSimpleCrawler();
 
         if(crawler != null) {
-            //crawler.startCrawl();
+            crawler.startCrawl();
             if (crawler.getErrorStatus()) {
                 System.out.println("Crawler has been crashed");
             }
