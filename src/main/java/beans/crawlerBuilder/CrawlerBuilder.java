@@ -11,6 +11,8 @@ import java.util.List;
  *
  * @author Verbitsky Segey
  * @version 1.0
+ *
+ * @see beans.crawler.Crawler
  */
 
 public interface CrawlerBuilder {
