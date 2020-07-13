@@ -33,7 +33,7 @@ public class SimpleHTMLParser extends Thread implements LinkParser {
      * Stores {@link Link} object, that contains URL address.
      * Parser uses {@link URLDownloader} implementation for download HTML page to file.
      * File is analyzed with methods of {@link StringUtil} static class
-     * for extracting values of <A > HTML tags and collecting it in list of {@link Link} objects.
+     * for extracting values of {@code <a>Link</a>} HTML tags and collecting it in list of {@link Link} objects.
      */
     private Link link;
 

@@ -1,0 +1,8 @@
+unnamed package
+beans.crawler
+beans.crawlerBuilder
+beans.HTMLparser
+beans.link
+beans.statistic
+beans.urlDownloader
+utils
