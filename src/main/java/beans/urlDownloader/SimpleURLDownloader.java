@@ -7,6 +7,19 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * This is a simple implementation of {@link beans.urlDownloader.URLDownloader} interface.
+ * Provides downloading web pages
+ *
+ * @author Verbitsky Sergey
+ * @version 1.0
+ * @see URL
+ * @see java.net.URLConnection
+ * @see HttpURLConnection
+ * @see File
+ * @see Link
+ */
+
 public class SimpleURLDownloader implements URLDownloader {
     private URL url;
     private HttpURLConnection connection;
@@ -27,13 +40,13 @@ public class SimpleURLDownloader implements URLDownloader {
 
             status = connection.getResponseCode();
         } catch (IOException e) {
-            System.out.println("Processed filed: "+ link.getLinkValue());
+            System.out.println("Processed filed: " + link.getLinkValue());
             return null;
         }
 
-        File  downloadFile= null;
-        if (status == HttpURLConnection.HTTP_OK)  {
-            downloadFile= createFileForDownload(link);
+        File downloadFile = null;
+        if (status == HttpURLConnection.HTTP_OK) {
+            downloadFile = createFileForDownload(link);
             if (downloadFile.exists()) {
                 try (BufferedReader reader = new BufferedReader
                         (new InputStreamReader(connection.getInputStream()));
@@ -41,7 +54,7 @@ public class SimpleURLDownloader implements URLDownloader {
                              (new FileWriter(downloadFile))) {
                     writer.write(link.getLinkValue());
                     writer.write("\n");
-                    if (reader !=null) {
+                    if (reader != null) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             writer.write(line);
@@ -52,7 +65,7 @@ public class SimpleURLDownloader implements URLDownloader {
                     }
 
                 } catch (IOException e) {
-                    System.out.println("Processed filed: "+ link.getLinkValue());
+                    System.out.println("Processed filed: " + link.getLinkValue());
                     return null;
                 }
             } else {

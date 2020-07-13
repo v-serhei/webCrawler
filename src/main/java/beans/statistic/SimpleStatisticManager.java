@@ -15,6 +15,28 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+/**
+ * This class is a simple implementation of {@link beans.statistic.StatisticManager} interface.
+ * It implements methods of interface to control process of collecting information about searched words
+ * from downloaded text/html files.
+ * <p>
+ * It uses threadsafe realisation of collections, cause it runs collectors {@link StatisticCollector} object
+ * in separated threads.
+ * <p>
+ * Summary statistics are written to a CSV file
+ *
+ * @author Verbitsky Sergey
+ * @version 1.0
+ * @see StatisticResult
+ * @see StatisticManager
+ * @see CopyOnWriteArraySet
+ * @see BlockingQueue
+ * @see CopyOnWriteArrayList
+ * @see AtomicInteger
+ * @see Executors
+ */
+
 public class SimpleStatisticManager implements StatisticManager {
     private CopyOnWriteArraySet<StatisticResult> fullStats;
     private BlockingQueue<String> filesQueue;
@@ -52,7 +74,7 @@ public class SimpleStatisticManager implements StatisticManager {
                 String fileName = filesQueue.poll();
 
                 if (processedFiles.contains(fileName)) {
-                    System.out.println("File already processed "+fileName);
+                    System.out.println("File already processed " + fileName);
                     continue;
                 }
                 fileParserPool.execute(new SimpleStatisticCollector(fileName, searchWords, this));
@@ -110,7 +132,7 @@ public class SimpleStatisticManager implements StatisticManager {
             List<String[]> fullStatistic = new ArrayList<>(1024);
             String fStatPath = StringUtil.STATISTIC_FOLDER.concat(fileName);
             StringBuilder header = generateCSVHeader();
-            if(header == null) {
+            if (header == null) {
                 return;
             }
 
@@ -139,7 +161,7 @@ public class SimpleStatisticManager implements StatisticManager {
             List<String[]> topTenStatistic = new ArrayList<>(10);
             String tStatPath = StringUtil.STATISTIC_FOLDER.concat("TopTen").concat(fileName);
             StringBuilder header = generateCSVHeader();
-            if(header == null) {
+            if (header == null) {
                 return;
             }
 
@@ -202,7 +224,7 @@ public class SimpleStatisticManager implements StatisticManager {
             }
         }
         System.out.println("\n\nTop 10 pages that contain the maximum number of searched words:\n");
-        List <StatisticResult> top = getTopTenResult();
+        List<StatisticResult> top = getTopTenResult();
 
         if (top.isEmpty()) {
             System.out.println("No statistic files");

@@ -4,9 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+
+/**
+ * The class describes an object that encapsulates the information about the number of searched words,
+ * that was collected from HTML pages
+ *
+ * @author Verbitsky Sergey
+ */
+
 public class StatisticResult {
+    /**
+     * Stores URL address of the page
+     */
     private String link;
+    /**
+     * Stores statistic about of searched words:
+     * key = word
+     * value = count
+     */
     private Map<String, Integer> statistic;
+    /**
+     * Stores the number of all found words count
+     */
     private int totalHits;
 
     public StatisticResult() {

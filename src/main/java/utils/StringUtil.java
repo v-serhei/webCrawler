@@ -9,7 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtil {
+/**
+ * Abstract helper class that contains methods, used to parse and process strings
+ */
+
+
+public abstract class StringUtil {
+
 
     public static final String ROOT_RESOURCES_FOLDER;
     public static final String DOWNLOADS_FOLDER;

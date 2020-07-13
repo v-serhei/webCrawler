@@ -1,10 +1,8 @@
 package beans.crawler;
 
 /**
- *
  * Base interface of Web Crawler
  * Provides methods for control web crawling process
- *
  *
  * @author Verbitsky Segey
  * @version 1.0
@@ -40,9 +38,9 @@ public interface Crawler {
 
     /**
      * Save statistic to file
+     *
      * @param fileName - contains the specific file name
      *                 for creating the statistic file
-     *
      * @see beans.statistic.StatisticResult
      * @see beans.statistic.StatisticManager
      */

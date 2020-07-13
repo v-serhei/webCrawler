@@ -9,6 +9,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The class is a simple implementation of {@link beans.statistic.StatisticCollector} interface.
+ * It provides collecting process of {@link StatisticResult} objects from downloaded pages.
+ *
+ * @author Verbitsky Sergey
+ * @version 1.0
+ * @see StatisticCollector
+ * @see StatisticResult
+ */
+
 public class SimpleStatisticCollector implements StatisticCollector {
 
     private String filePath;
@@ -33,7 +43,7 @@ public class SimpleStatisticCollector implements StatisticCollector {
         File f = new File(filePath);
         if (f.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-                //first line = link
+                //first line contains Url-address of the site
                 statRes.setLink(reader.readLine());
                 while (reader.ready()) {
                     sb.append(reader.readLine());
