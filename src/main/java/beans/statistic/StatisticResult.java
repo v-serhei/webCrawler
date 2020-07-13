@@ -2,6 +2,7 @@ package beans.statistic;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class StatisticResult {
     private String link;
@@ -56,5 +57,18 @@ public class StatisticResult {
         }
         sb.append("Total hits: ").append(totalHits);
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StatisticResult)) return false;
+        StatisticResult result = (StatisticResult) o;
+        return Objects.equals(link, result.link);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(link);
     }
 }

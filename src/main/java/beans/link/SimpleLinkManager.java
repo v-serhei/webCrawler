@@ -115,9 +115,17 @@ public class SimpleLinkManager implements LinkManager {
         }
     }
 
+
+
     @Override
     public void stopNow() {
-        linkProcessorPool.shutdownNow();
+        try {
+            linkProcessorPool.shutdownNow();
+            linkProcessorPool.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            linkProcessorPool.shutdownNow();
+        }
         crawler.stopCrawlWithCrash();
         workStatus = false;
         synchronized (crawler) {

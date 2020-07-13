@@ -13,8 +13,9 @@ public class StringUtil {
 
     public static final String ROOT_RESOURCES_FOLDER;
     public static final String DOWNLOADS_FOLDER;
-    public static final String STATISTIC_FOLDER;
     private static final String DOWNLOAD_FILE_EXTENSION;
+    public static final String STATISTIC_FOLDER;
+    public static final String STATISTIC_DELIMITER;
     private static AtomicInteger fileNumerator;
 
     static {
@@ -34,6 +35,7 @@ public class StringUtil {
                 .concat(File.separator);
 
         DOWNLOAD_FILE_EXTENSION = "_download.txt";
+        STATISTIC_DELIMITER = ";DELIMITER;";
         fileNumerator = new AtomicInteger(0);
     }
 

@@ -5,7 +5,6 @@ import beans.link.LinkManager;
 import beans.link.SimpleLinkManager;
 import beans.statistic.SimpleStatisticManager;
 import beans.statistic.StatisticManager;
-import utils.Helper;
 import utils.StringUtil;
 
 import java.util.List;
@@ -74,6 +73,8 @@ public class SimpleCrawler implements Crawler {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -87,6 +88,9 @@ public class SimpleCrawler implements Crawler {
 
     @Override
     public void showStatistic() {
+        if (!linkManager.getWorkStatus()) {
+            lmThread.interrupt();
+        }
         statisticManager.collectStatistic();
         statisticManager.printTopTenResults();
     }

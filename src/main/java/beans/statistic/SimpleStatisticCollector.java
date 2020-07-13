@@ -32,6 +32,7 @@ public class SimpleStatisticCollector implements StatisticCollector {
         StatisticResult sr = new StatisticResult();
         File f = new File(filePath);
         if (f.exists()) {
+            //System.out.println("Читаю файл: "+f.getAbsolutePath());
             try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
                 //first line = link
                 statRes.setLink(reader.readLine());
@@ -56,6 +57,6 @@ public class SimpleStatisticCollector implements StatisticCollector {
 
     @Override
     public void run() {
-        statisticManager.addStatisticResult(getStatisticFromFile());
+        statisticManager.addStatisticResult(getStatisticFromFile(), filePath);
     }
 }

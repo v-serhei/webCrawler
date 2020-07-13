@@ -22,9 +22,14 @@ public class Runner {
         cBuilder.setDepthLink(8);
         cBuilder.setVisitedPagesLimit(10000);
         cBuilder.setParallelMode(true); //default 4 threads, thread count can be changed in DefaultCrawlerSettings interface
-        */
+
         cBuilder.setDepthLink(2);
         cBuilder.setVisitedPagesLimit(10);
+        cBuilder.setParallelMode(true);
+        cBuilder.setSearchWords(searchWords);
+         */
+        cBuilder.setDepthLink(8);
+        cBuilder.setVisitedPagesLimit(800);
         cBuilder.setParallelMode(true);
         cBuilder.setSearchWords(searchWords);
 
@@ -38,7 +43,6 @@ public class Runner {
             crawler.showStatistic();
             crawler.saveStatistic("Test1.CSV");
         }
-
         System.out.println("\n\nEnd program");
     }
 }
