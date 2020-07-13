@@ -187,7 +187,7 @@ public class SimpleCrawler implements Crawler {
     }
 
     /**
-     * Method called by Runner to get crawling process status
+     * Method called by {@code Runner} to get crawling process status
      * @return boolean value "True" if process was crashed
      *
      * */
